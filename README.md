@@ -4,6 +4,19 @@ A full-stack banking web application built with **Java**, **Spring Boot**, **Spr
 
 ---
 
+## Screenshots
+
+### Login Page
+![Login Page](src/main/resources/static/images/login%20page.png)
+
+### Customer Dashboard
+![Customer Dashboard](src/main/resources/static/images/customer%20dashboard.png)
+
+### Admin Dashboard
+![Admin Dashboard](src/main/resources/static/images/dashboard%20for%20admin.png)
+
+---
+
 ## Features
 
 - **User Registration & Login** — customers register with their own username/password; admins use a separate login
@@ -36,28 +49,23 @@ A full-stack banking web application built with **Java**, **Spring Boot**, **Spr
 
 ### Prerequisites
 
-- JDK 24 (or 11+)
-- Maven 3.9+ (or use the included `mvnw`)
+- JDK 11+ (tested with JDK 24)
+- Maven 3.9+
 
 ### Run the App
 
 ```powershell
-# Set environment (PowerShell)
 $env:JAVA_HOME = "C:\Program Files\jdk-24.0.1"
 $env:PATH = "C:\Users\pc\maven3\apache-maven-3.9.9\bin;" + $env:PATH
-
-# Navigate to project
 cd C:\Users\pc\Desktop\BankApp-master\BankApp-master
-
-# Run
-mvn spring-boot:run
+& "C:\Users\pc\maven3\apache-maven-3.9.9\bin\mvn.cmd" spring-boot:run
 ```
 
-The app starts on **http://localhost:8989/bank-api**
+App starts on **http://localhost:8989/bank-api**
 
 ---
 
-## Accessing the App
+## Pages
 
 | Page | URL |
 |------|-----|
@@ -80,16 +88,22 @@ The app starts on **http://localhost:8989/bank-api**
 
 ### Customer Flow
 1. Go to **Register** — fill in username, password, name, customer number, contact details
-2. Go to **Login** — sign in with your username and password (Customer tab)
+2. Go to **Login** — Customer tab — sign in with your credentials
 3. Dashboard shows **your profile only** — My Account, Accounts, Transfer, Transactions
 
 ### Admin Flow
-1. Go to **Login** — click the **Admin** tab (auto-fills credentials)
-2. Full access — view all customers, add/delete customers, manage all accounts
+1. Go to **Login** — click **Admin** tab (auto-fills `bankapp` / `changeit`)
+2. Full access — view all customers, add/delete customers, manage accounts
 
 ---
 
 ## API Endpoints
+
+### Auth
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/register` | Register new user + create customer profile |
+| GET | `/auth/me` | Get current logged-in user info |
 
 ### Customers
 | Method | Endpoint | Description |
@@ -105,18 +119,55 @@ The app starts on **http://localhost:8989/bank-api**
 |--------|----------|-------------|
 | GET | `/accounts/{accountNumber}` | Get account details |
 | POST | `/accounts/add/{customerNumber}` | Add account to customer |
-| PUT | `/accounts/transfer/{customerNumber}` | Transfer funds |
-| GET | `/accounts/transactions/{accountNumber}` | Get transactions |
+| PUT | `/accounts/transfer/{customerNumber}` | Transfer funds between accounts |
+| GET | `/accounts/transactions/{accountNumber}` | Get transaction history |
 
-### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | Register new user |
-| GET | `/auth/me` | Get current user info |
+---
+
+## Project Structure
+
+```
+src/main/java/com/coding/exercise/bankapp/
+├── config/
+│   ├── ApplicationConfig.java      # BCrypt, Swagger config
+│   └── SecurityConfig.java         # Spring Security rules
+├── controller/
+│   ├── AuthController.java         # Registration & login
+│   ├── CustomerController.java     # Customer CRUD
+│   └── AccountController.java      # Accounts & transfers
+├── service/
+│   ├── BankingService.java
+│   ├── BankingServiceImpl.java
+│   ├── UserService.java            # User auth service
+│   └── helper/BankingServiceHelper.java
+├── model/
+│   ├── Customer.java
+│   ├── Account.java
+│   ├── Transaction.java
+│   ├── UserAccount.java            # Login credentials
+│   └── ...
+├── repository/
+│   ├── CustomerRepository.java
+│   ├── AccountRepository.java
+│   ├── UserAccountRepository.java
+│   └── ...
+└── domain/
+    ├── CustomerDetails.java
+    ├── AccountInformation.java
+    └── ...
+
+src/main/resources/static/
+├── index.html      # Login page
+├── register.html   # Registration (3-step wizard)
+├── dashboard.html  # Main banking dashboard
+├── css/style.css   # Green theme
+├── js/app.js       # Auth helpers, API calls
+└── images/         # Screenshots
+```
 
 ---
 
 ## GitHub
 
-**Repository:** https://github.com/ben-can-code/BankApp  
+**Repository:** https://github.com/ben-can-code/javabanking  
 **Author:** ben-can-code
