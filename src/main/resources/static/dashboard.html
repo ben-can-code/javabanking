@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexaBank — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M2 10h20v2H2zm1-4h18v2H3zm-1 8h20v6H2v-6zm2 2v2h16v-2H4zm7-14l9 4H3l9-4z"/></svg>
+      </div>
+      <div><h2>NexaBank</h2><p>Banking Portal</p></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Main</div>
+      <button class="nav-item active" data-section="overview"  onclick="showSection('overview')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></span> Overview
+      </button>
+      <button class="nav-item" data-section="myaccount" onclick="showSection('myaccount')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></span> My Account
+      </button>
+
+      <div class="nav-section-title" id="admin-nav-label" style="display:none">Admin</div>
+      <button class="nav-item" data-section="customers" id="nav-customers" style="display:none" onclick="showSection('customers')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></span> All Customers
+      </button>
+
+      <div class="nav-section-title" style="margin-top:4px;">Banking</div>
+      <button class="nav-item" data-section="accounts" onclick="showSection('accounts')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></span> Accounts
+      </button>
+      <button class="nav-item" data-section="transfer" onclick="showSection('transfer')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg></span> Transfer Funds
+      </button>
+      <button class="nav-item" data-section="transactions" onclick="showSection('transactions')">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></span> Transactions
+      </button>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="ua">?</div>
+      <div class="user-info">
+        <div class="user-name" id="un">Loading</div>
+        <div class="user-role" id="ur">—</div>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Sign out">
+        <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h2 id="topbar-title">Overview</h2>
+        <p  id="topbar-sub">Welcome back! Here is your summary.</p>
+      </div>
+      <div>
+        <button class="btn btn-primary btn-sm" id="btn-add-customer" style="display:none" onclick="openModal('modal-add-customer')">+ New Customer</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- OVERVIEW -->
+      <div class="section active" id="section-overview">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+            <div><div class="stat-label">Total Customers</div><div class="stat-value" id="st-cust">—</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+            <div><div class="stat-label">My Customer No.</div><div class="stat-value" id="st-custno">—</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+            <div><div class="stat-label">Role</div><div class="stat-value" id="st-role" style="font-size:1rem;">—</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+            <div><div class="stat-label">Status</div><div class="stat-value" style="font-size:1rem;"><span class="badge badge-green">Online</span></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Customers</h3>
+            <button class="btn btn-outline btn-sm" onclick="showSection('customers')" id="overview-viewall" style="display:none">View All</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Customer No.</th><th>Status</th><th>Email</th></tr></thead>
+              <tbody id="ov-tbody"><tr><td colspan="4" style="text-align:center;padding:28px;color:var(--muted)">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY ACCOUNT -->
+      <div class="section" id="section-myaccount">
+        <div class="profile-card">
+          <div class="p-avatar" id="pc-avatar">?</div>
+          <h3 id="pc-name">Loading...</h3>
+          <p  id="pc-email">—</p>
+          <div class="profile-meta">
+            <div><strong id="pc-custno">—</strong>Customer No.</div>
+            <div><strong id="pc-username">—</strong>Username</div>
+            <div><strong id="pc-role">—</strong>Role</div>
+          </div>
+        </div>
+        <div class="card" id="my-customer-card" style="display:none">
+          <div class="card-header"><h3>My Banking Profile</h3></div>
+          <div class="card-body" id="my-customer-body">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ALL CUSTOMERS -->
+      <div class="section" id="section-customers">
+        <div class="card">
+          <div class="card-header">
+            <h3>All Customers</h3>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input type="text" id="cust-search" placeholder="Search customers..."
+                style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.875rem;outline:none;width:200px;"
+                oninput="filterCustomers(this.value)">
+              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-customer')">+ Add</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Customer No.</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="cust-tbody"><tr><td colspan="6" style="text-align:center;padding:28px;color:var(--muted)">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNTS -->
+      <div class="section" id="section-accounts">
+        <div class="card">
+          <div class="card-header"><h3>Look Up Account</h3></div>
+          <div class="card-body">
+            <div style="display:flex;gap:12px;align-items:flex-end;">
+              <div class="form-group" style="flex:1;margin:0;"><label>Account Number</label><input type="number" id="acct-no" placeholder="Enter account number"></div>
+              <button class="btn btn-primary" style="height:44px;" onclick="lookupAccount()">Search</button>
+            </div>
+            <div id="acct-result" style="margin-top:20px;display:none;"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Open New Account</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>Customer Number *</label><input type="number" id="na-cust" placeholder="Customer number"></div>
+              <div class="form-group"><label>Account Number *</label><input type="number" id="na-no" placeholder="Account number"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Account Type</label><select id="na-type"><option value="SAVINGS">Savings</option><option value="CHECKING">Checking</option><option value="FIXED_DEPOSIT">Fixed Deposit</option></select></div>
+              <div class="form-group"><label>Initial Balance ($)</label><input type="number" id="na-bal" placeholder="0.00" step="0.01" min="0"></div>
+            </div>
+            <button class="btn btn-primary" style="width:auto;padding:11px 28px;" onclick="addAccount()">Open Account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSFER -->
+      <div class="section" id="section-transfer">
+        <div style="max-width:540px;">
+          <div class="card">
+            <div class="card-header"><h3>Transfer Funds</h3></div>
+            <div class="card-body">
+              <div class="alert alert-danger"  id="tf-err"><span id="tf-err-msg"></span></div>
+              <div class="alert alert-success" id="tf-ok" ><span id="tf-ok-msg"></span></div>
+              <div class="form-group"><label>Your Customer Number *</label><input type="number" id="tf-cust" placeholder="Your customer number"></div>
+              <div class="form-row">
+                <div class="form-group"><label>From Account *</label><input type="number" id="tf-from" placeholder="Source account"></div>
+                <div class="form-group"><label>To Account *</label><input type="number" id="tf-to" placeholder="Destination account"></div>
+              </div>
+              <div class="form-group"><label>Amount ($) *</label><input type="number" id="tf-amt" placeholder="0.00" step="0.01" min="0.01"></div>
+              <button class="btn btn-primary" id="tf-btn" onclick="doTransfer()">
+                <span class="spinner" id="tf-spin"></span><span id="tf-label">Send Transfer</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div class="section" id="section-transactions">
+        <div class="card">
+          <div class="card-header"><h3>Transaction History</h3></div>
+          <div class="card-body" style="padding-bottom:0;">
+            <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:20px;">
+              <div class="form-group" style="flex:1;margin:0;"><label>Account Number</label><input type="number" id="tx-no" placeholder="Enter account number"></div>
+              <button class="btn btn-primary" style="height:44px;" onclick="loadTx()">Load</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Account No.</th><th>Type</th><th>Amount</th><th>Date</th></tr></thead>
+              <tbody id="tx-tbody"><tr><td colspan="4" style="text-align:center;padding:28px;color:var(--muted)">Enter an account number above.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- Modal: Add Customer -->
+<div class="modal-backdrop" id="modal-add-customer">
+  <div class="modal">
+    <div class="modal-header"><h3>Add New Customer</h3><button class="modal-close" onclick="closeModal('modal-add-customer')">x</button></div>
+    <div class="modal-body">
+      <div class="alert alert-danger" id="ac-err"><span id="ac-err-msg"></span></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input type="text" id="ac-first" placeholder="John"></div>
+        <div class="form-group"><label>Last Name *</label><input type="text" id="ac-last" placeholder="Doe"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Customer No. *</label><input type="number" id="ac-no" placeholder="2001"></div>
+        <div class="form-group"><label>Status</label><select id="ac-status"><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" id="ac-email" placeholder="john@example.com"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="ac-phone" placeholder="+1 555 0100"></div>
+      </div>
+      <div class="form-group"><label>City</label><input type="text" id="ac-city" placeholder="New York"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-customer')">Cancel</button>
+      <button class="btn btn-primary" style="width:auto;" id="ac-btn" onclick="submitAddCustomer()">
+        <span class="spinner" id="ac-spin"></span><span id="ac-label">Add Customer</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: View Customer -->
+<div class="modal-backdrop" id="modal-view">
+  <div class="modal">
+    <div class="modal-header"><h3 id="view-title">Customer</h3><button class="modal-close" onclick="closeModal('modal-view')">x</button></div>
+    <div class="modal-body" id="view-body">Loading...</div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteFromModal()">Delete</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-view')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  requireAuth();
+  let allCustomers = [], viewingCustNo = null, isAdmin = false;
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const info = getUserInfo();
+    const name = info.fullName || getUsername();
+    isAdmin = (info.role === 'ROLE_ADMIN');
+
+    document.getElementById('ua').textContent = (name||'?').slice(0,2).toUpperCase();
+    document.getElementById('un').textContent  = getUsername();
+    document.getElementById('ur').textContent  = isAdmin ? 'Administrator' : 'Customer';
+
+    if (isAdmin) {
+      document.getElementById('admin-nav-label').style.display = '';
+      document.getElementById('nav-customers').style.display   = '';
+      document.getElementById('btn-add-customer').style.display = '';
+      document.getElementById('overview-viewall').style.display = '';
+    }
+    if (info.customerNumber) {
+      document.getElementById('tf-cust').value = info.customerNumber;
+      document.getElementById('na-cust').value = info.customerNumber;
+    }
+    loadOverview();
+  });
+
+  async function loadOverview() {
+    try {
+      const res = await apiFetch('/customers/all');
+      if (!res || !res.ok) return;
+      allCustomers = await res.json();
+      document.getElementById('st-cust').textContent = isAdmin ? allCustomers.length : '—';
+      document.getElementById('st-cust').closest('.stat-card').style.display = isAdmin ? '' : 'none';
+      const info = getUserInfo();
+      document.getElementById('st-custno').textContent = info.customerNumber ? '#' + info.customerNumber : 'N/A';
+      document.getElementById('st-role').innerHTML = `<span class="badge badge-green">${isAdmin ? 'Admin' : 'Customer'}</span>`;
+      const tbody = document.getElementById('ov-tbody');
+      if (!allCustomers.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--muted)">No customers found.</td></tr>'; return; }
+      const list = isAdmin ? allCustomers.slice(0,5) : allCustomers.filter(c => String(c.customerNumber) === String(info.customerNumber));
+      if (!list.length && !isAdmin) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:28px;color:var(--muted)">No profile found. Please contact admin.</td></tr>'; return; }
+      tbody.innerHTML = list.map(c => `<tr>
+        <td><div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;">${initials(c.firstName,c.lastName)}</div>
+          <span style="font-weight:600;">${c.firstName||''} ${c.lastName||''}</span>
+        </div></td>
+        <td><code style="background:var(--bg);padding:2px 8px;border-radius:4px;">${c.customerNumber||'—'}</code></td>
+        <td><span class="badge ${c.status==='ACTIVE'?'badge-green':'badge-yellow'}">${c.status||'—'}</span></td>
+        <td>${c.contactDetails?.emailId||'—'}</td>
+      </tr>`).join('');
+    } catch(e) { console.error(e); }
+  }
+
+  async function loadMyAccount() {
+    const info = getUserInfo();
+    document.getElementById('pc-avatar').textContent   = (info.fullName||getUsername()||'?').slice(0,2).toUpperCase();
+    document.getElementById('pc-name').textContent     = info.fullName || getUsername();
+    document.getElementById('pc-email').textContent    = info.email || '—';
+    document.getElementById('pc-custno').textContent   = info.customerNumber ? '#' + info.customerNumber : '—';
+    document.getElementById('pc-username').textContent = getUsername();
+    document.getElementById('pc-role').textContent     = isAdmin ? 'Administrator' : 'Customer';
+    if (info.customerNumber) {
+      document.getElementById('my-customer-card').style.display = '';
+      const body = document.getElementById('my-customer-body');
+      body.innerHTML = '<p style="color:var(--muted)">Loading profile...</p>';
+      try {
+        const res = await apiFetch('/customers/' + info.customerNumber);
+        if (!res || !res.ok) { body.innerHTML = '<p style="color:var(--muted)">No banking profile found for your account.</p>'; return; }
+        const c = await res.json(); const addr = c.customerAddress||{}, ct = c.contactDetails||{};
+        body.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div><div class="stat-label">Full Name</div><div style="font-weight:600;margin-top:2px;">${c.firstName||''} ${c.middleName||''} ${c.lastName||''}</div></div>
+          <div><div class="stat-label">Email</div><div style="font-weight:600;margin-top:2px;">${ct.emailId||'—'}</div></div>
+          <div><div class="stat-label">Home Phone</div><div style="font-weight:600;margin-top:2px;">${ct.homePhone||'—'}</div></div>
+          <div><div class="stat-label">Work Phone</div><div style="font-weight:600;margin-top:2px;">${ct.workPhone||'—'}</div></div>
+          <div><div class="stat-label">Status</div><div style="margin-top:4px;"><span class="badge ${c.status==='ACTIVE'?'badge-green':'badge-yellow'}">${c.status||'—'}</span></div></div>
+          <div><div class="stat-label">City</div><div style="font-weight:600;margin-top:2px;">${addr.city||'—'}</div></div>
+        </div>`;
+      } catch(e) { body.innerHTML = '<p style="color:var(--danger)">Error loading profile.</p>'; }
+    }
+  }
+
+  async function loadCustomers() {
+    const tbody = document.getElementById('cust-tbody');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--muted)">Loading...</td></tr>';
+    try {
+      const res = await apiFetch('/customers/all');
+      if (!res||!res.ok) return;
+      allCustomers = await res.json();
+      renderCustTable(allCustomers);
+    } catch(e) {}
+  }
+
+  function renderCustTable(list) {
+    const tbody = document.getElementById('cust-tbody');
+    if (!list.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">No customers found.</td></tr>'; return; }
+    tbody.innerHTML = list.map(c => `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;">${initials(c.firstName,c.lastName)}</div>
+        <div><div style="font-weight:600;">${c.firstName||''} ${c.lastName||''}</div><div style="font-size:.72rem;color:var(--muted);">${c.middleName||''}</div></div>
+      </div></td>
+      <td><code style="background:var(--bg);padding:2px 8px;border-radius:4px;">${c.customerNumber||'—'}</code></td>
+      <td>${c.contactDetails?.emailId||'—'}</td>
+      <td>${c.contactDetails?.homePhone||'—'}</td>
+      <td><span class="badge ${c.status==='ACTIVE'?'badge-green':'badge-yellow'}">${c.status||'—'}</span></td>
+      <td><div style="display:flex;gap:6px;">
+        <button class="btn btn-outline btn-sm" onclick="viewCustomer(${c.customerNumber})">View</button>
+        <button class="btn btn-danger btn-sm"  onclick="deleteCustomer(${c.customerNumber})">Delete</button>
+      </div></td>
+    </tr>`).join('');
+  }
+
+  function filterCustomers(q) {
+    q = q.toLowerCase();
+    renderCustTable(allCustomers.filter(c =>
+      (c.firstName+' '+c.lastName).toLowerCase().includes(q) ||
+      String(c.customerNumber).includes(q) ||
+      (c.contactDetails?.emailId||'').toLowerCase().includes(q)
+    ));
+  }
+
+  async function viewCustomer(no) {
+    viewingCustNo = no;
+    document.getElementById('view-title').textContent = 'Customer #' + no;
+    document.getElementById('view-body').innerHTML = '<p style="text-align:center;padding:20px;color:var(--muted)">Loading...</p>';
+    openModal('modal-view');
+    try {
+      const res = await apiFetch('/customers/' + no);
+      if (!res||!res.ok) { document.getElementById('view-body').innerHTML='<p style="text-align:center;color:var(--danger)">Failed to load.</p>'; return; }
+      const c = await res.json(); const addr=c.customerAddress||{}, ct=c.contactDetails||{};
+      document.getElementById('view-body').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          <div style="width:52px;height:52px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;">${initials(c.firstName,c.lastName)}</div>
+          <div><h3>${c.firstName||''} ${c.middleName||''} ${c.lastName||''}</h3><span class="badge ${c.status==='ACTIVE'?'badge-green':'badge-yellow'}">${c.status||'—'}</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div><div class="stat-label">Customer No.</div><div style="font-weight:600;margin-top:2px;">${c.customerNumber||'—'}</div></div>
+          <div><div class="stat-label">Email</div><div style="font-weight:600;margin-top:2px;">${ct.emailId||'—'}</div></div>
+          <div><div class="stat-label">Home Phone</div><div style="font-weight:600;margin-top:2px;">${ct.homePhone||'—'}</div></div>
+          <div><div class="stat-label">Work Phone</div><div style="font-weight:600;margin-top:2px;">${ct.workPhone||'—'}</div></div>
+        </div>
+        ${addr.address1?`<div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border);font-size:.875rem;">${addr.address1}${addr.address2?', '+addr.address2:''}<br>${addr.city||''} ${addr.state||''} ${addr.zip||''}<br>${addr.country||''}</div>`:''}`;
+    } catch(e) {}
+  }
+
+  async function deleteCustomer(no) {
+    if (!confirm('Delete customer #'+no+'? This cannot be undone.')) return;
+    try {
+      const res = await apiFetch('/customers/'+no, {method:'DELETE'});
+      if (res&&res.ok) { showToast('Customer deleted.','success'); loadCustomers(); loadOverview(); }
+      else showToast('Failed to delete customer.','error');
+    } catch(e) { showToast('Error.','error'); }
+  }
+
+  function deleteFromModal() { closeModal('modal-view'); if(viewingCustNo) deleteCustomer(viewingCustNo); }
+
+  async function submitAddCustomer() {
+    const btn=document.getElementById('ac-btn'), spin=document.getElementById('ac-spin'), label=document.getElementById('ac-label');
+    const errBox=document.getElementById('ac-err'), errMsg=document.getElementById('ac-err-msg');
+    const first=document.getElementById('ac-first').value.trim(), last=document.getElementById('ac-last').value.trim();
+    const no=parseInt(document.getElementById('ac-no').value), status=document.getElementById('ac-status').value;
+    const email=document.getElementById('ac-email').value.trim(), phone=document.getElementById('ac-phone').value.trim(), city=document.getElementById('ac-city').value.trim();
+    if (!first||!last||!no) { errMsg.textContent='First name, last name and customer number are required.'; errBox.classList.add('show'); return; }
+    errBox.classList.remove('show'); btn.disabled=true; spin.classList.add('show'); label.textContent='Adding...';
+    try {
+      const res = await apiFetch('/customers/add', {method:'POST', body:JSON.stringify({firstName:first,lastName:last,customerNumber:no,status,contactDetails:{emailId:email,homePhone:phone,workPhone:''},customerAddress:{address1:'',city,state:'',zip:'',country:''}})});
+      if (res&&(res.ok||res.status===201)) {
+        closeModal('modal-add-customer'); showToast(first+' '+last+' added!','success');
+        ['ac-first','ac-last','ac-no','ac-email','ac-phone','ac-city'].forEach(id=>document.getElementById(id).value='');
+        loadCustomers(); loadOverview();
+      } else { const t=await res.text(); errMsg.textContent=t||'Failed. Customer number may already exist.'; errBox.classList.add('show'); }
+    } catch(e) { errMsg.textContent='Server error.'; errBox.classList.add('show'); }
+    btn.disabled=false; spin.classList.remove('show'); label.textContent='Add Customer';
+  }
+
+  async function lookupAccount() {
+    const num=document.getElementById('acct-no').value.trim(), rd=document.getElementById('acct-result');
+    if (!num) { showToast('Enter an account number.','error'); return; }
+    rd.style.display='block'; rd.innerHTML='<p style="color:var(--muted)">Searching...</p>';
+    try {
+      const res=await apiFetch('/accounts/'+num);
+      if (!res||res.status===404||res.status===204) { rd.innerHTML='<p style="color:var(--danger)">Account not found.</p>'; return; }
+      const a=await res.json(); const bank=a.bankInformation||{};
+      rd.innerHTML=`<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div><div class="stat-label">Account Number</div><div style="font-size:1.4rem;font-weight:700;">${a.accountNumber||'—'}</div></div>
+          <span class="badge ${a.accountStatus==='ACTIVE'?'badge-green':'badge-yellow'}">${a.accountStatus||'—'}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;">
+          <div><div class="stat-label">Type</div><div style="font-weight:600;">${a.accountType||'—'}</div></div>
+          <div><div class="stat-label">Balance</div><div style="font-weight:700;color:var(--success);font-size:1.05rem;">${fmtMoney(a.accountBalance)}</div></div>
+          <div><div class="stat-label">Branch</div><div style="font-weight:600;">${bank.branchName||'—'}</div></div>
+        </div></div>`;
+    } catch(e) { rd.innerHTML='<p style="color:var(--danger)">Error looking up account.</p>'; }
+  }
+
+  async function addAccount() {
+    const cn=parseInt(document.getElementById('na-cust').value), an=parseInt(document.getElementById('na-no').value);
+    const type=document.getElementById('na-type').value, bal=parseFloat(document.getElementById('na-bal').value)||0;
+    if (!cn||!an) { showToast('Customer number and account number are required.','error'); return; }
+    try {
+      const res=await apiFetch('/accounts/add/'+cn,{method:'POST',body:JSON.stringify({accountNumber:an,accountType:type,accountBalance:bal,accountStatus:'ACTIVE'})});
+      if (res&&(res.ok||res.status===201)) { showToast('Account opened successfully!','success'); ['na-no','na-bal'].forEach(id=>document.getElementById(id).value=''); }
+      else { const t=await res.text(); showToast(t||'Failed to create account.','error'); }
+    } catch(e) { showToast('Server error.','error'); }
+  }
+
+  async function doTransfer() {
+    const cn=parseInt(document.getElementById('tf-cust').value), from=parseInt(document.getElementById('tf-from').value);
+    const to=parseInt(document.getElementById('tf-to').value), amt=parseFloat(document.getElementById('tf-amt').value);
+    const err=document.getElementById('tf-err'), ok=document.getElementById('tf-ok');
+    const btn=document.getElementById('tf-btn'), spin=document.getElementById('tf-spin'), label=document.getElementById('tf-label');
+    err.classList.remove('show'); ok.classList.remove('show');
+    if (!cn||!from||!to||!amt||amt<=0) { document.getElementById('tf-err-msg').textContent='All fields are required and amount must be greater than 0.'; err.classList.add('show'); return; }
+    if (from===to) { document.getElementById('tf-err-msg').textContent='Source and destination accounts cannot be the same.'; err.classList.add('show'); return; }
+    btn.disabled=true; spin.classList.add('show'); label.textContent='Processing...';
+    try {
+      const res=await apiFetch('/accounts/transfer/'+cn,{method:'PUT',body:JSON.stringify({fromAccountNumber:from,toAccountNumber:to,transferAmount:amt})});
+      if (res&&res.ok) {
+        document.getElementById('tf-ok-msg').textContent=fmtMoney(amt)+' transferred from account #'+from+' to #'+to+' successfully.';
+        ok.classList.add('show'); showToast('Transfer complete!','success');
+        ['tf-from','tf-to','tf-amt'].forEach(id=>document.getElementById(id).value='');
+      } else { const t=await res.text(); document.getElementById('tf-err-msg').textContent=t||'Transfer failed.'; err.classList.add('show'); }
+    } catch(e) { document.getElementById('tf-err-msg').textContent='Server error during transfer.'; err.classList.add('show'); }
+    btn.disabled=false; spin.classList.remove('show'); label.textContent='Send Transfer';
+  }
+
+  async function loadTx() {
+    const num=document.getElementById('tx-no').value.trim(), tbody=document.getElementById('tx-tbody');
+    if (!num) { showToast('Enter an account number.','error'); return; }
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--muted)">Loading...</td></tr>';
+    try {
+      const res=await apiFetch('/accounts/transactions/'+num);
+      if (!res||!res.ok) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--danger);padding:24px;">No transactions found.</td></tr>'; return; }
+      const data=await res.json();
+      if (!data||!data.length) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--muted)">No transactions for this account.</td></tr>'; return; }
+      tbody.innerHTML=data.map(t=>`<tr>
+        <td><code style="background:var(--bg);padding:2px 8px;border-radius:4px;">${t.accountNumber||'—'}</code></td>
+        <td><span class="badge ${t.txType==='CREDIT'?'badge-green':t.txType==='DEBIT'?'badge-red':'badge-teal'}">${t.txType||'—'}</span></td>
+        <td style="font-weight:700;color:${t.txType==='CREDIT'?'var(--success)':'var(--danger)'};">${fmtMoney(t.txAmount)}</td>
+        <td style="color:var(--muted);">${fmtDate(t.txDateTime)}</td>
+      </tr>`).join('');
+    } catch(e) { tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--danger);padding:24px;">Error loading transactions.</td></tr>'; }
+  }
+
+  document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', e => { if(e.target===b) b.classList.remove('show'); }));
+</script>
+</body>
+</html>

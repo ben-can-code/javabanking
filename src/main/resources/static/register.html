@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexaBank — Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:500px;">
+
+    <div class="auth-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M2 10h20v2H2zm1-4h18v2H3zm-1 8h20v6H2v-6zm2 2v2h16v-2H4zm7-14l9 4H3l9-4z"/></svg>
+      </div>
+      <div><h1>NexaBank</h1><p>Open your account today</p></div>
+    </div>
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Fill in your details to get started</p>
+
+    <div class="step-indicator">
+      <div class="step active" id="sd1"><div class="step-circle">1</div><span class="step-label">Login</span></div>
+      <div class="step"        id="sd2"><div class="step-circle">2</div><span class="step-label">Personal</span></div>
+      <div class="step"        id="sd3"><div class="step-circle">3</div><span class="step-label">Contact</span></div>
+      <div class="step"        id="sd4"><div class="step-circle">4</div><span class="step-label">Done</span></div>
+    </div>
+
+    <div class="alert alert-danger"  id="reg-err"><span id="reg-err-msg"></span></div>
+    <div class="alert alert-success" id="reg-ok" ><span id="reg-ok-msg"></span></div>
+
+    <form id="reg-form">
+
+      <!-- Step 1 -->
+      <div class="form-step active" id="fs1">
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" id="r-username" placeholder="Choose a username (min 3 chars)" required>
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="r-password" placeholder="Minimum 4 characters" required>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password *</label>
+          <input type="password" id="r-confirm" placeholder="Repeat your password" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next: Personal Info</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="form-step" id="fs2">
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" id="r-first" placeholder="John" required></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" id="r-last" placeholder="Doe" required></div>
+        </div>
+        <div class="form-group"><label>Middle Name</label><input type="text" id="r-middle" placeholder="Optional"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Customer Number *</label><input type="number" id="r-custno" placeholder="e.g. 1001" required min="1"></div>
+          <div class="form-group"><label>Status</label><select id="r-status"><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button type="button" class="btn btn-outline" style="flex:1" onclick="nextStep(1)">Back</button>
+          <button type="button" class="btn btn-primary" style="flex:2" onclick="nextStep(3)">Next: Contact</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="form-step" id="fs3">
+        <div class="form-group"><label>Email Address *</label><input type="email" id="r-email" placeholder="john@example.com" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Home Phone *</label><input type="tel" id="r-home" placeholder="+1 555 0100" required></div>
+          <div class="form-group"><label>Work Phone</label><input type="tel" id="r-work" placeholder="Optional"></div>
+        </div>
+        <div class="form-group"><label>City</label><input type="text" id="r-city" placeholder="New York"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Country</label><input type="text" id="r-country" placeholder="USA"></div>
+          <div class="form-group"><label>ZIP Code</label><input type="text" id="r-zip" placeholder="10001"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:4px;">
+          <button type="button" class="btn btn-outline" style="flex:1" onclick="nextStep(2)">Back</button>
+          <button type="submit" class="btn btn-primary" style="flex:2" id="reg-btn">
+            <span class="spinner" id="reg-spin"></span>
+            <span id="reg-label">Create Account</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="auth-footer" id="signin-link">
+      Already have an account? <a href="index.html">Sign in</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  redirectIfLoggedIn();
+  let curStep = 1;
+
+  function showErr(msg) {
+    document.getElementById('reg-err-msg').textContent = msg;
+    document.getElementById('reg-err').classList.add('show');
+  }
+  function hideErr() { document.getElementById('reg-err').classList.remove('show'); }
+
+  function validateStep(s) {
+    hideErr();
+    if (s === 1) {
+      const u = document.getElementById('r-username').value.trim();
+      const p = document.getElementById('r-password').value;
+      const c = document.getElementById('r-confirm').value;
+      if (!u || u.length < 3)  { showErr('Username must be at least 3 characters.'); return false; }
+      if (p.length < 4)        { showErr('Password must be at least 4 characters.'); return false; }
+      if (p !== c)             { showErr('Passwords do not match.'); return false; }
+    }
+    if (s === 2) {
+      if (!document.getElementById('r-first').value.trim() || !document.getElementById('r-last').value.trim()) { showErr('First and last name are required.'); return false; }
+      if (!document.getElementById('r-custno').value || parseInt(document.getElementById('r-custno').value) < 1) { showErr('A valid customer number is required.'); return false; }
+    }
+    if (s === 3) {
+      if (!document.getElementById('r-email').value.trim()) { showErr('Email address is required.'); return false; }
+      if (!document.getElementById('r-home').value.trim())  { showErr('Home phone is required.');    return false; }
+    }
+    return true;
+  }
+
+  function nextStep(n) {
+    if (n > curStep && !validateStep(curStep)) return;
+    document.getElementById('fs' + curStep).classList.remove('active');
+    document.getElementById('sd' + curStep).classList.remove('active');
+    if (n > curStep) document.getElementById('sd' + curStep).classList.add('done');
+    curStep = n;
+    document.getElementById('fs' + curStep).classList.add('active');
+    document.getElementById('sd' + curStep).classList.add('active');
+    hideErr();
+  }
+
+  document.getElementById('reg-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!validateStep(3)) return;
+    const btn = document.getElementById('reg-btn'), spin = document.getElementById('reg-spin'), label = document.getElementById('reg-label');
+    btn.disabled = true; spin.classList.add('show'); label.textContent = 'Creating...';
+
+    const payload = {
+      username: document.getElementById('r-username').value.trim(),
+      password: document.getElementById('r-password').value,
+      firstName: document.getElementById('r-first').value.trim(),
+      lastName:  document.getElementById('r-last').value.trim(),
+      middleName: document.getElementById('r-middle').value.trim(),
+      customerNumber: parseInt(document.getElementById('r-custno').value),
+      status:   document.getElementById('r-status').value,
+      email:    document.getElementById('r-email').value.trim(),
+      homePhone: document.getElementById('r-home').value.trim(),
+      workPhone: document.getElementById('r-work').value.trim(),
+      city:     document.getElementById('r-city').value.trim(),
+      country:  document.getElementById('r-country').value.trim(),
+      zip:      document.getElementById('r-zip').value.trim(),
+      address1: document.getElementById('r-city').value.trim(),
+      state: '', address2: ''
+    };
+
+    try {
+      const res  = await fetch('/bank-api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (res.ok || res.status === 201) {
+        document.getElementById('reg-form').style.display = 'none';
+        document.getElementById('sd3').classList.add('done');
+        document.getElementById('sd4').classList.add('active');
+        document.getElementById('reg-ok-msg').textContent = `Account created for ${payload.firstName} ${payload.lastName}. Redirecting to sign in...`;
+        document.getElementById('reg-ok').classList.add('show');
+        document.getElementById('signin-link').style.display = 'none';
+        setTimeout(() => window.location.href = 'index.html', 2800);
+      } else {
+        showErr(data.error || 'Registration failed. Please try again.');
+      }
+    } catch(err) {
+      showErr('Cannot reach the server. Make sure the app is running.');
+    }
+    btn.disabled = false; spin.classList.remove('show'); label.textContent = 'Create Account';
+  });
+</script>
+</body>
+</html>
